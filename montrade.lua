@@ -81,7 +81,7 @@ local UICornerTitle = Instance.new("UICorner")
 UICornerTitle.CornerRadius = UDim.new(0, 10)
 UICornerTitle.Parent = Title
 
--- [[ 🔴 ปุ่มปิด (Close - X) ]] --
+-- ปุ่มปิด (Close - X)
 local CloseButton = Instance.new("TextButton")
 CloseButton.Name = "CloseButton"
 CloseButton.Parent = MainFrame
@@ -96,7 +96,7 @@ local UICornerClose = Instance.new("UICorner")
 UICornerClose.CornerRadius = UDim.new(0, 6)
 UICornerClose.Parent = CloseButton
 
--- [[ 🟡 ปุ่มย่อ (Minimize - _) ]] --
+-- ปุ่มย่อ (Minimize - _)
 local MinButton = Instance.new("TextButton")
 MinButton.Name = "MinButton"
 MinButton.Parent = MainFrame
@@ -111,22 +111,24 @@ local UICornerMin = Instance.new("UICorner")
 UICornerMin.CornerRadius = UDim.new(0, 6)
 UICornerMin.Parent = MinButton
 
--- [[ Logic ปุ่ม ]] --
+-- Logic ปุ่ม
 CloseButton.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 MinButton.MouseButton1Click:Connect(function() MainFrame.Visible = false OpenButton.Visible = true end)
 OpenButton.MouseButton1Click:Connect(function() MainFrame.Visible = true OpenButton.Visible = false end)
 
--- ช่องใส่ User ID
+-- [[ ส่วน Control ด้านบน ]] --
+
+-- ช่องใส่ User ID (ปรับขนาดเล็กลง)
 local UserIdInput = Instance.new("TextBox")
 UserIdInput.Parent = MainFrame
 UserIdInput.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 UserIdInput.Position = UDim2.new(0.05, 0, 0.12, 0)
-UserIdInput.Size = UDim2.new(0.7, 0, 0, 35)
+UserIdInput.Size = UDim2.new(0.45, 0, 0, 35) -- กว้าง 45%
 UserIdInput.Font = Enum.Font.Gotham
-UserIdInput.PlaceholderText = "Waiting for trade..."
+UserIdInput.PlaceholderText = "Waiting ID..."
 UserIdInput.Text = ""
 UserIdInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-UserIdInput.TextSize = 14
+UserIdInput.TextSize = 13
 local UICornerInput = Instance.new("UICorner")
 UICornerInput.CornerRadius = UDim.new(0, 6)
 UICornerInput.Parent = UserIdInput
@@ -138,20 +140,48 @@ StatusLabel.BackgroundTransparency = 1
 StatusLabel.Position = UDim2.new(0, 0, 1, 2)
 StatusLabel.Size = UDim2.new(1, 0, 0, 15)
 StatusLabel.Font = Enum.Font.GothamBold
-StatusLabel.Text = "⚠️ No Trade Active"
+StatusLabel.Text = "..."
 StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-StatusLabel.TextSize = 10
+StatusLabel.TextSize = 9
 StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- ปุ่ม MAX ALL (เลือกทั้งหมด)
+local MaxAllBtn = Instance.new("TextButton")
+MaxAllBtn.Parent = MainFrame
+MaxAllBtn.BackgroundColor3 = Color3.fromRGB(255, 140, 0) -- สีส้ม
+MaxAllBtn.Position = UDim2.new(0.52, 0, 0.12, 0)
+MaxAllBtn.Size = UDim2.new(0.20, 0, 0, 35)
+MaxAllBtn.Font = Enum.Font.GothamBold
+MaxAllBtn.Text = "MAX ALL"
+MaxAllBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MaxAllBtn.TextSize = 11
+local UICornerMax = Instance.new("UICorner")
+UICornerMax.CornerRadius = UDim.new(0, 6)
+UICornerMax.Parent = MaxAllBtn
+
+-- ปุ่ม RESET (เคลียร์เป็น 0)
+local ResetBtn = Instance.new("TextButton")
+ResetBtn.Parent = MainFrame
+ResetBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80) -- สีเทา
+ResetBtn.Position = UDim2.new(0.74, 0, 0.12, 0)
+ResetBtn.Size = UDim2.new(0.10, 0, 0, 35)
+ResetBtn.Font = Enum.Font.GothamBold
+ResetBtn.Text = "CLR"
+ResetBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ResetBtn.TextSize = 11
+local UICornerReset = Instance.new("UICorner")
+UICornerReset.CornerRadius = UDim.new(0, 6)
+UICornerReset.Parent = ResetBtn
 
 -- ปุ่ม Refresh
 local RefreshBtn = Instance.new("TextButton")
 RefreshBtn.Parent = MainFrame
 RefreshBtn.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-RefreshBtn.Position = UDim2.new(0.78, 0, 0.12, 0)
-RefreshBtn.Size = UDim2.new(0.17, 0, 0, 35)
+RefreshBtn.Position = UDim2.new(0.86, 0, 0.12, 0)
+RefreshBtn.Size = UDim2.new(0.09, 0, 0, 35)
 RefreshBtn.Text = "🔄"
 RefreshBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-RefreshBtn.TextSize = 20
+RefreshBtn.TextSize = 18
 local UICornerRefresh = Instance.new("UICorner")
 UICornerRefresh.CornerRadius = UDim.new(0, 6)
 UICornerRefresh.Parent = RefreshBtn
@@ -203,7 +233,6 @@ local function StartAutoTracker()
                         if val and type(val) == "number" then foundId = val end
                     end)
                 end
-
                 if not foundId then
                     for _, p in pairs(Players:GetPlayers()) do
                         if p ~= LocalPlayer then
@@ -221,14 +250,14 @@ local function StartAutoTracker()
 
             if foundId then
                 if UserIdInput.Text ~= tostring(foundId) then UserIdInput.Text = tostring(foundId) end
-                StatusLabel.Text = "✅ Linked with: " .. tostring(foundId)
+                StatusLabel.Text = "✅ Active: " .. tostring(foundId)
                 StatusLabel.TextColor3 = Color3.fromRGB(85, 255, 127)
             else
                 if TradingFrame and TradingFrame.Visible then
-                    StatusLabel.Text = "⚠️ Searching ID..."
+                    StatusLabel.Text = "⚠️ Searching..."
                     StatusLabel.TextColor3 = Color3.fromRGB(255, 200, 0)
                 else
-                    StatusLabel.Text = "❌ No Trade Active"
+                    StatusLabel.Text = "❌ No Trade"
                     StatusLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
                 end
             end
@@ -340,6 +369,27 @@ local function UpdateList()
     ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #keys * 45)
 end
 
+-- [[ Logic ปุ่ม Control ]] --
+
+-- MAX ALL: ปรับเลขทุกช่องเป็นค่าสูงสุด
+MaxAllBtn.MouseButton1Click:Connect(function()
+    for name, data in pairs(Inputs) do
+        local total = #data.Available
+        data.Box.Text = tostring(total)
+    end
+end)
+
+-- RESET: ปรับเลขทุกช่องเป็น 0
+ResetBtn.MouseButton1Click:Connect(function()
+    for name, data in pairs(Inputs) do
+        data.Box.Text = "0"
+    end
+end)
+
+-- Refresh: โหลดรายการใหม่
+RefreshBtn.MouseButton1Click:Connect(UpdateList)
+
+-- Send Trade
 SendButton.MouseButton1Click:Connect(function()
     local targetId = tonumber(UserIdInput.Text)
     if not targetId then
@@ -365,9 +415,8 @@ SendButton.MouseButton1Click:Connect(function()
         end
     end
     
-    -- [[ ✅ แก้ไข: อนุญาตให้ส่ง 0 ชิ้นได้ (Clear Trade) ]] --
     if totalToSend == 0 then
-        print("ℹ️ Sending EMPTY payload (Clearing Trade)")
+        print("ℹ️ Clearing Trade (0 items)")
         SendButton.Text = "🧹 CLEARING..."
     end
     
@@ -385,11 +434,7 @@ SendButton.MouseButton1Click:Connect(function()
     
     if Success then
         SendButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
-        if totalToSend == 0 then
-            SendButton.Text = "✅ CLEARED!"
-        else
-            SendButton.Text = "✅ SENT SUCCESS!"
-        end
+        SendButton.Text = (totalToSend == 0) and "✅ CLEARED!" or "✅ SENT SUCCESS!"
     else
         SendButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
         SendButton.Text = "❌ ERROR: " .. tostring(Error)
@@ -400,5 +445,4 @@ SendButton.MouseButton1Click:Connect(function()
     SendButton.Text = "UPDATE / SEND TRADE"
 end)
 
-RefreshBtn.MouseButton1Click:Connect(UpdateList)
 UpdateList()
